@@ -1,0 +1,25 @@
+{
+  "name": "backend-template",
+  "version": "1.0.0",
+  "description": "this is a template that will be used to come up with backend applications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ElieMuluke/backend-template.git"
+  },
+  "keywords": [
+    "backend",
+    "template",
+    "nodejs",
+    "expressjs"
+  ],
+  "author": "Elie Muluke",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ElieMuluke/backend-template/issues"
+  },
+  "homepage": "https://github.com/ElieMuluke/backend-template#readme"
+}
