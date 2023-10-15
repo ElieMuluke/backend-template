@@ -5,7 +5,7 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import morgan from 'morgan';
-import router from './routes/routes';
+import router from './routes';
 import dbConnection from './config/db';
 
 // configure dotenv

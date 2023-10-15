@@ -1,16 +1,14 @@
-import { Schema } from "mongoose";
-
-const UserSchema = new Schema(
-	{
+const role: string[] = ["admin", "student", "restaurant", "farmer"];
+type UserType = {
 		email: String,
 		username: String,
 		password: String,
 		otp: String,
-		otpExpiresAt: Date,
+		otpExpiresAt: String,
+		resetPasswordToken: String,
+		resetPasswordExpiresAt: String,
 		accessToken: String,
 		refreshToken: String,
-		resetPasswordToken: String,
-		resetPasswordExpiresAt: Date,
 		profile: {
 			firstName: String,
 			lastName: String,
@@ -23,23 +21,17 @@ const UserSchema = new Schema(
 				city: String,
 				country: String,
 				location: {
-					type: String,
 					coordinates: {
-						lat: Number,
-						lng: Number,
-					},
-				},
+						lat: String,
+						lng: String,
+					}
+				}
 			},
-
 			isEmailVerified: Boolean,
-			emailVerifiedAt: Date,
 			isUserVerified: Boolean,
-			userVerifiedAt: Date,
-			createdAt: Date,
-			updatedAt: Date,
-		},
-	},
-	{ timestamps: true }
-);
+			emailVerifiedAt: String,
+			userVerifiedAt: String,
+		}
+}
 
-export { UserSchema };
+export { role, UserType };
