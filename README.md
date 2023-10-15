@@ -71,4 +71,4 @@ http://localhost:3000/api/v1
 
 ## Author
 
-[Elie Y. Muluke]('https://github.com/ElieMuluke')
+- [Elie Y. Muluke]('https://github.com/ElieMuluke')
