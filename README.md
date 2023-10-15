@@ -61,11 +61,11 @@ yarn test
 
 ### API Documentation
 
-[http://localhost:3000/api-docs]('http://localhost:3000/api-docs')
+http://localhost:3000/api-docs
 
 ### API Endpoints
 
-[http://localhost:3000/api/v1]('http://localhost:3000/api/v1')
+http://localhost:3000/api/v1
 
 ### Postman Collection
 
