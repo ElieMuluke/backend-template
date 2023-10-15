@@ -1,11 +1,7 @@
-import {Request, Response, Router} from 'express';
+import { Router } from 'express';
+import {statusCheck} from '../controllers/status.controller';
 
 const router = Router();
-
-const statusCheck = (req: Request, res: Response) => {
-	res.status(200).send(`🟢 OK, Server is up and running`);
-	return;
-}
 
 router.get('/', statusCheck);
 
