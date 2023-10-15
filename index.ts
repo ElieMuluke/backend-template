@@ -1,12 +1,14 @@
-import express, { Application, Express } from 'express';
-import dotenv from 'dotenv';
+import express, { Application, Express } from "express";
+import dotenv from "dotenv";
 // import bodyParser from 'body-parser';
-import cors from 'cors';
-import fs from 'fs';
-import path from 'path';
-import morgan from 'morgan';
-import router from './routes';
-import dbConnection from './config/db';
+import fs from "fs";
+import path from "path";
+import cors from "cors";
+import morgan from "morgan";
+import swaggerUI from "swagger-ui-express";
+import router from "./routes";
+import dbConnection from "./config/db";
+import swaggerSpecs from "./config/swaggerConfig";
 
 // configure dotenv
 dotenv.config();
@@ -21,17 +23,38 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // configure access and error logs to ./logs/[logType].log
-const accessLogStream = fs.createWriteStream(path.join(__dirname, '../logs/access.log'), { flags: 'a' });
-const errorLogStream = fs.createWriteStream(path.join(__dirname, '../logs/error.log'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream, skip: (req, res) => res.statusCode >= 400 }));
-app.use(morgan('combined', { stream: errorLogStream, skip: (req, res) => res.statusCode < 400 }));
+const accessLogStream = fs.createWriteStream(
+	path.join(__dirname, "../logs/access.log"),
+	{ flags: "a" }
+);
+const errorLogStream = fs.createWriteStream(
+	path.join(__dirname, "../logs/error.log"),
+	{ flags: "a" }
+);
+app.use(
+	morgan("combined", {
+		stream: accessLogStream,
+		skip: (req, res) => res.statusCode >= 400,
+	})
+);
+app.use(
+	morgan("combined", {
+		stream: errorLogStream,
+		skip: (req, res) => res.statusCode < 400,
+	})
+);
+
+// configure swagger
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
 // configure routes
-app.use('/api/v1', router);
+app.use("/api/v1", router);
 
 // start express server
-app.listen(port, async() => {
-	console.info(`⚡️[server]: Server is running at ${process.env.BASE_URL}:${port}`);
+app.listen(port, async () => {
+	console.info(
+		`⚡️[server]: Server is running at ${process.env.BASE_URL}:${port}`
+	);
 	await dbConnection;
 });
 export default app;

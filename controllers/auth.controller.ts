@@ -41,7 +41,7 @@ const register = async (req: Request, res: Response) => {
 			Date.now() + 3 * 60 * 60 * 1000
 		).toISOString(); // expires in 3 hours
 		const encryptedPassword = await bcrypt.hash(password, 10); // encrypt password
-
+		const strippedPhone = phone.replace(/[^0-9]/g, ""); // remove all non-numeric characters from phone number such as +, -, (, )
 		const newUser = await createUser({
 			email,
 			username,
@@ -51,7 +51,7 @@ const register = async (req: Request, res: Response) => {
 			profile: {
 				firstName,
 				lastName,
-				phone,
+				phone: strippedPhone,
 				role,
 				organization,
 				address: {
@@ -92,7 +92,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 		: true;
 
 	if (isOTPExpired) {
-		res.status(400).json({ message: "OTP expired" });
+		res.status(401).json({ message: "OTP expired" });
 		return;
 	}
 
@@ -135,7 +135,7 @@ const login = async (req: Request, res: Response) => {
 		});
 
 		if (updatedUser) {
-			res.status(200).json({ updatedUser });
+			res.status(200).json({ updatedUser, mesage: "Login successful" });
 			return;
 		}
 	} catch (err) {
@@ -198,7 +198,7 @@ const verifyResetToken = async (req: Request, res: Response) => {
 			: true;
 
 		if (isResetPasswordTokenExpired) {
-			res.status(400).json({ message: "Reset password token expired" });
+			res.status(401).json({ message: "Reset password token expired" });
 			return;
 		}
 
@@ -216,4 +216,37 @@ const verifyResetToken = async (req: Request, res: Response) => {
 	}
 };
 
-export { register, verifyEmail, login, forgotPassword, verifyResetToken };
+const setAdmin = async (req: Request, res: Response) => {
+	try {
+		const { email } = req.body;
+		const user = await findUserByEmail(email);
+		if (!user) {
+			res.status(400).json({ message: "Invalid email" });
+			return;
+		}
+
+		const updatedUser = await updateUser(user._id.toString(), {
+			"profile.role": "admin",
+		});
+
+		if (updatedUser) {
+			res.status(200).json({
+				user: updatedUser.email,
+				message: "Admin set",
+			});
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ message: "Internal server error" });
+		return;
+	}
+};
+
+export {
+	register,
+	verifyEmail,
+	login,
+	forgotPassword,
+	verifyResetToken,
+	setAdmin,
+};
