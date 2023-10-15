@@ -208,7 +208,7 @@ router.post("/verify-reset-token", verifyResetToken);
  * @swagger
  * /set-admin:
  *   post:
- *     summary: verify a new user's email
+ *     summary: set a specific user as admin
  *     consumes:
  *     - application/json
  *     parameters:
