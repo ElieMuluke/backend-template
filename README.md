@@ -4,44 +4,60 @@
 
 ## Requirements
 
-- Node v18.18.0+ or Docker
-- NPM v10.2.0+ or Yarn v1.22.19+
+- [Node v18.18.0+](https://nodejs.org/en/download/current/) or [Docker](https://www.docker.com/)
+- [Yarn v1.22.19+](https://yarnpkg.com/en/docs/install) or [NPM v5.0+](https://www.npmjs.com/get-npm)
 
 ## Getting started
 
 ### Clone the repository
 
-`git clone https://github.com/ElieMuluke/backend-template.git `
-
-`cd backend-template `
+```bash
+git clone https://github.com/ElieMuluke/backend-template.git
+cd backend-template
+```
 
 ### Install Yarn
 
-`npm install -g yarn ` or `npm install --global yarn `
+```bash
+npm install -g yarn
+npm install --global yarn
+```
 
 ### Install dependencies
 
-`yarn`
+```bash
+yarn
+```
 
 ### Run the application
 
-`yarn start `
+```bash
+yarn start
+```
 
 ### Set environment variables
 
-`cp .env.example .env `
+```bash
+cp .env.example .env
+```
 
 ### Run the application in development mode
 
-`yarn dev `
+```bash
+yarn dev
+```
 
 ### Run the application in production mode
 
-`yarn start `
+```bash
+yarn start
+```
 
 ### Run the application in test mode
 
-`yarn test `
+```bash
+yarn test
+```
 
 ### API Documentation
 
@@ -55,4 +71,4 @@
 
 ## Author
 
-[Elie Muluke]('https://github.com/ElieMuluke')
+[Elie Y. Muluke]('https://github.com/ElieMuluke')
