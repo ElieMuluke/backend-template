@@ -5,7 +5,7 @@ const UserSchema = new Schema(
 		email: String,
 		username: String,
 		password: String,
-		otp: String,
+		otp: Number,
 		otpExpiresAt: Date,
 		accessToken: String,
 		refreshToken: String,
@@ -22,13 +22,6 @@ const UserSchema = new Schema(
 				street: String,
 				city: String,
 				country: String,
-				location: {
-					type: String,
-					coordinates: {
-						lat: Number,
-						lng: Number,
-					},
-				},
 			},
 
 			isEmailVerified: Boolean,

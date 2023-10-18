@@ -1,12 +1,14 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import {
 	register,
 	verifyEmail,
 	login,
 	forgotPassword,
 	verifyResetToken,
+	setNewPassword,
 	setAdmin,
 } from "../controllers/auth.controller";
+import AuthMiddleware from "../middleware/auth.middleware";
 
 const router = express.Router();
 
@@ -55,13 +57,6 @@ const router = express.Router();
  *             type: string
  *           country:
  *             type: string
- *           coordinates:
- *             type: object
- *             properties:
- *               lat:
- *                 type: number
- *               lng:
- *                 type: number
  *         example:
  *            id: 1
  *            firstName: John
@@ -74,7 +69,6 @@ const router = express.Router();
  *            street: 1234 Main St
  *            city: Nairobi
  *            country: Kenya
- *            coordinates: {lat: 0, lng: 0}
  *     responses:
  *       201:
  *         description: User created successfully
@@ -206,9 +200,40 @@ router.post("/forgot-password", forgotPassword);
 router.post("/verify-reset-token", verifyResetToken);
 /**
  * @swagger
+ * /set-new-password:
+ *   post:
+ *     summary: set new password token
+ *     consumes:
+ *     - application/json
+ *     parameters:
+ *     - in: body
+ *       schema:
+ *         type: object
+ *         required:
+ *         - email
+ *         - password
+ *         properties:
+ *           email:
+ *             type: string
+ *           password:
+ *             type: string
+ *         example:
+ *            email: john@fake.com
+ *            password: pass
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *       400:
+ *         description: Invalid email
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/set-new-password", setNewPassword);
+/**
+ * @swagger
  * /set-admin:
  *   post:
- *     summary: set a specific user as admin
+ *     summary: admin user to set a specific other user as admin
  *     consumes:
  *     - application/json
  *     parameters:
@@ -230,7 +255,9 @@ router.post("/verify-reset-token", verifyResetToken);
  *       500:
  *         description: Internal server error
  */
-router.post("/set-admin", setAdmin);
+router.post("/set-admin", AuthMiddleware, setAdmin);
 
 // TODO: refresh token
 // router.post("/refresh-token", refreshToken);
+
+export default router;

@@ -29,6 +29,16 @@ const findAllUsers = async () => {
 	return await User.find({});
 };
 
+const getUserRole = async (id: String) => {
+	const user = await findUser(id);
+
+	if (!user) {
+		return null;
+	}
+
+	return user.profile?.role || null;
+};
+
 const updateUser = async (id: String, user: any) => {
 	return await User.findByIdAndUpdate(id, user);
 };
@@ -44,6 +54,7 @@ export {
 	findUserByEmailAndResetPasswordToken,
 	findUserByEmailAndOTP,
 	findAllUsers,
+	getUserRole,
 	updateUser,
 	deleteUser,
 };

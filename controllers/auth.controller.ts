@@ -26,7 +26,6 @@ const register = async (req: Request, res: Response) => {
 			street,
 			city,
 			country,
-			coordinates,
 		} = req.body;
 
 		const userExists = await findUserByEmail(email);
@@ -36,7 +35,7 @@ const register = async (req: Request, res: Response) => {
 		}
 
 		const username = email.split("@")[0]; // username is the part before @ in email
-		const otp = generateOtpAndToken(); // return 6 digit number
+		const otp = await generateOtpAndToken(); // return 6 digit number
 		const otpExpiresAt = new Date(
 			Date.now() + 3 * 60 * 60 * 1000
 		).toISOString(); // expires in 3 hours
@@ -58,9 +57,6 @@ const register = async (req: Request, res: Response) => {
 					street,
 					city,
 					country,
-					location: {
-						coordinates,
-					},
 				},
 				isEmailVerified: false,
 				isUserVerified: false,
@@ -112,6 +108,7 @@ const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body;
 		const user = await findUserByEmail(email);
+
 		if (!user) {
 			res.status(400).json({ message: "Invalid email or password" });
 			return;
@@ -135,7 +132,7 @@ const login = async (req: Request, res: Response) => {
 		});
 
 		if (updatedUser) {
-			res.status(200).json({ updatedUser, mesage: "Login successful" });
+			res.status(200).json({ user: updatedUser, mesage: "Login successful" });
 			return;
 		}
 	} catch (err) {
@@ -153,7 +150,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 			return;
 		}
 
-		const resetPasswordToken = generateOtpAndToken(); // return 6 digit number
+		const resetPasswordToken = await generateOtpAndToken(); // return 6 digit number
 
 		const resetPasswordExpiresAt = new Date(
 			Date.now() + 3 * 60 * 60 * 1000
@@ -208,7 +205,35 @@ const verifyResetToken = async (req: Request, res: Response) => {
 		});
 
 		if (updatedUser)
-			res.status(200).json({ message: "Reset password token verified" });
+			res.status(200).json({ email, message: "Reset password token verified" });
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ message: "Internal server error" });
+		return;
+	}
+};
+
+const setNewPassword = async (req: Request, res: Response) => {
+	try {
+		const { email, password } = req.body;
+
+		const user = await findUserByEmail(email);
+		if (!user) {
+			res.status(400).json({ message: "Invalid email" });
+			return;
+		}
+
+		const encryptedPassword = await bcrypt.hash(password, 10); // encrypt password
+
+		const updatedUser = await updateUser(user._id.toString(), {
+			password: encryptedPassword,
+		});
+
+		if (updatedUser) {
+			res.status(200).json({
+				message: "Password updated successfully",
+			});
+		}
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ message: "Internal server error" });
@@ -218,10 +243,16 @@ const verifyResetToken = async (req: Request, res: Response) => {
 
 const setAdmin = async (req: Request, res: Response) => {
 	try {
-		const { email } = req.body;
+		const { email, currentlyLoggedInUser } = req.body;
+		console.log(currentlyLoggedInUser);
 		const user = await findUserByEmail(email);
 		if (!user) {
 			res.status(400).json({ message: "Invalid email" });
+			return;
+		}
+
+		if (!(currentlyLoggedInUser.role === "admin")) {
+			res.status(401).json({ message: "Unauthorized, Need to be an admin" });
 			return;
 		}
 
@@ -248,5 +279,6 @@ export {
 	login,
 	forgotPassword,
 	verifyResetToken,
+	setNewPassword,
 	setAdmin,
 };
