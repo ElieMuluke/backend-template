@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { statusCheck } from "../controllers/status.controller";
+import { statusCheck, downloadLogs } from "../controllers/index.controller";
 
 const router = Router();
 
@@ -10,5 +10,6 @@ const router = Router();
  *     description:  check the status of the server
  */
 router.get("/", statusCheck);
+router.get("/download-logs", downloadLogs);
 
 export default router;

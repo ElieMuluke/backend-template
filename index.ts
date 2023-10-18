@@ -24,6 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // configure access and error logs to ./logs/[logType].log
+if (!fs.existsSync(path.join(__dirname, "../logs"))) {
+	fs.mkdirSync(path.join(__dirname, "../logs"));
+}
+
 const accessLogStream = fs.createWriteStream(
 	path.join(__dirname, "../logs/access.log"),
 	{ flags: "a" }
